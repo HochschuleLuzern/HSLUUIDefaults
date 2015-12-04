@@ -578,7 +578,7 @@
             $uploadButton.bind("click", startUploadsCallback);
 
             // attach to unload event
-            $(window).bind("beforeunload", pageUnloadingCallback);
+            //$(window).bind("beforeunload", pageUnloadingCallback);
 
             isInitialized = true;
         }
@@ -685,12 +685,12 @@
             // uploading, ask user if he really wants to cancel?
             if (isUploadInProgress)
             {
-                var result = confirm(self.texts.cancelAllQuestion);
-                if (result == false)
-                {
-                    e.preventDefault();
-                    return;
-                }
+                //var result = confirm(self.texts.cancelAllQuestion);
+                //if (result == false)
+                //{
+                //    e.preventDefault();
+                //    return;
+                //}
             }
 
             // cancel all pending uploads
@@ -937,7 +937,7 @@
                 $cancelButton.bind("click", cancelAllFiles);
 
                 // attach to unload event
-                $(window).bind("beforeunload", pageUnloading);
+                //$(window).bind("beforeunload", pageUnloading);
 
                 // hide the "hide all details" options
                 $hideOptions.hide();
@@ -1100,12 +1100,12 @@
                 return;
 
             // ask user whether he wants to cancel all pending uploads
-            var result = confirm(il.FileUpload.texts.cancelAllQuestion);
-            if (result == false)
-            {
-                e.preventDefault();
-                return;
-            }
+            //var result = confirm(il.FileUpload.texts.cancelAllQuestion);
+            //if (result == false)
+            //{
+            //    e.preventDefault();
+            //    return;
+            //}
 
             cancelAllUploads();
         }
@@ -1380,6 +1380,7 @@
 				// all files uploaded?
 				if (allUploadsSuccessful())
 				{
+					isUploadInProgress=false;
 					// lets go back to the previous page
 					//$("#goBackToMediacast").click();
 					if($("#goBackToMediacast").attr('href')) window.location.href = $("#goBackToMediacast").attr('href');

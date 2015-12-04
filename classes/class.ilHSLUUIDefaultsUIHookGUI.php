@@ -37,6 +37,10 @@ il.Util.addOnLoad(function() {
 				global $lng;
 				require_once("./Services/FileUpload/classes/class.ilFileUploadSettings.php");
 
+				include_once ("./Modules/MediaCast/classes/class.ilMediaCastSettings.php");
+				$settings = ilMediaCastSettings::_getInstance();
+				$purposeSuffixes = $settings->getPurposeSuffixes();
+				
 				return array("mode" => ilUIHookPluginGUI::APPEND, "html" =>
 '
 
@@ -126,7 +130,7 @@ fileUpload1 = new ilFileUpload(1, {"dropZone":"#ilFileUploadDropZone_1","fileInp
     il.FileUpload.texts.dropFilesHere = "'.$lng->txt("drop_files_on_repo_obj_info").'";
     il.FileUpload.defaults.concurrentUploads = '.ilFileUploadSettings::getConcurrentUploads().';
     il.FileUpload.defaults.maxFileSize = '.ilFileUploadUtil::getMaxFileSize().';
-    il.FileUpload.defaults.allowedExtensions = [ "mp4","m4v","mov","flv","wmv","avi","mts","m2ts","mov","avi","wmv","aac","rm","mpg","mpeg","divx","flv","swf","ts","vob","mkv","ogv","mjpeg","m4v","3gpp","mp3","png","jpg","gif" ];
+    il.FileUpload.defaults.allowedExtensions = [ "'.implode('","',$purposeSuffixes['Standard']).'" ];
     il.FileUpload.defaults.supportedArchives = [];
 	
 	function removeMediaCastFile(id){
