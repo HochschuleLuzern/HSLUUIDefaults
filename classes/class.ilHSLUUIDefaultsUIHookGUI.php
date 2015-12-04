@@ -33,6 +33,10 @@ il.Util.addOnLoad(function() {
 			
 			//mediacast create
 			if(isset($_GET['cmdClass']) && $_GET['cmdClass']=='ilobjmediacastgui' && isset($_GET['cmd']) && $_GET['cmd']=='addCastItem'   ){
+				
+				global $lng;
+				require_once("./Services/FileUpload/classes/class.ilFileUploadSettings.php");
+
 				return array("mode" => ilUIHookPluginGUI::APPEND, "html" =>
 '
 
@@ -54,7 +58,7 @@ il.Util.addOnLoad(function() {
 +\'<div class="form-horizontal"> \'
 +\' \'
 +\' \'
-+\'		<div class="ilFormHeader"><h3 class="ilHeader"><a name="il_form_top"></a>Mehrere Mediacast-Beiträge hinzufügen</h3> \'
++\'		<div class="ilFormHeader"><h3 class="ilHeader"><a name="il_form_top"></a>'.$lng->txt('mcst_add_new_item').'</h3> \'
 +\'		<div class="ilHeaderDesc"></div> \'
 +\'		</div> \'
 +\' \'
@@ -64,26 +68,26 @@ il.Util.addOnLoad(function() {
 +\'			 \'
 +\'<div class="ilFileUploadContainer"> \'
 +\'	<div id="ilFileUploadDropArea_1" class="ilFileUploadDropArea"> \'
-+\'		<div id="ilFileUploadDropZone_1" class="ilFileUploadDropZone ilFileDropTarget"><i class="ilFileDropTargetOverlayImage"></i> Ziehen Sie die Dateien in diesen Bereich<br>&nbsp;<span class="ilFileUploadFileCount" style="display: none;">%s Datei(en) ausgewählt</span>&nbsp;</div> \'
-+\'		<br>- oder - \'
++\'		<div id="ilFileUploadDropZone_1" class="ilFileUploadDropZone ilFileDropTarget"><i class="ilFileDropTargetOverlayImage"></i> '.$lng->txt('drag_files_here').'<br>&nbsp;<span class="ilFileUploadFileCount" style="display: none;">'.$lng->txt('num_of_selected_files').'</span>&nbsp;</div> \'
++\'		<br>- '.$lng->txt('logic_or').' - \'
 +\'	</div> \'
 +\'	<div class="ilFileUploadDropAlternative"> \'
 +\'		<a id="ilFileUploadFileSelect_1" class="submit omitPreventDoubleSubmission" href="#"> \'
-+\'			<span><img src="./Customizing/global/skin/hslu/images/icon_fold.svg"> Wählen Sie die Dateien von Ihrem Computer aus</span> \'
++\'			<span><img src="./Customizing/global/skin/hslu/images/icon_fold.svg"> '.$lng->txt('select_files_from_computer').'</span> \'
 +\'            <input id="ilFileUploadInput_1" type="file" name="file_Standard" accept="" multiple=""> \'
 +\'		</a> \'
 +\'	</div> \'
 +\'	<div id="ilFileUploadList_1" class="ilFileUploadList" style="display: none;"> \'
-+\'		<div class="ilFileUploadListTitle">Ausgewählte Dateien: \'
++\'		<div class="ilFileUploadListTitle">'.$lng->txt('selected_files').': \'
 +\'            <div class="ilFileUploadToggleOptions"> \'
-+\'                <a class="ilFileUploadShowOptions" href="#">Alle Details anzeigen \'
++\'                <a class="ilFileUploadShowOptions" href="#">'.$lng->txt('show_all_details').' \'
 +\'                </a> \'
-+\'                <a class="ilFileUploadHideOptions" href="#" style="display: none;">Alle Details ausblenden \'
++\'                <a class="ilFileUploadHideOptions" href="#" style="display: none;">'.$lng->txt('hide_all_details').' \'
 +\'                </a> \'
 +\'            </div> \'
 +\'		</div> \'
 +\'	</div> \'
-+\'	<div class="help-block">Maximal erlaubte Upload-Größe: 700.0 MB</div> \'
++\'	<div class="help-block">'.$lng->txt('file_notice').': 700.0 MB</div> \'
 +\'</div> \'
 +\'			 \'
 +\'	</div> \'
@@ -94,7 +98,7 @@ il.Util.addOnLoad(function() {
 +\'	<div class="ilFormFooter clearfix"> \'
 +\'		<div class="col-sm-6 ilFormRequired">&nbsp;</div> \'
 +\'		<div class="col-sm-6 ilFormCmds"> \'
-+\'		<input class="btn btn-default btn-sm" type="button" name="cmd[uploadFiles]" value="Alle Dateien hochladen"> \'
++\'		<input class="btn btn-default btn-sm" type="button" name="cmd[uploadFiles]" value="'.$lng->txt('upload_files').'"> \'
 +\'		<a id="goBackToMediacast" href="ilias.php?baseClass=ilMediaCastHandlerGUI&cmd=listItems&ref_id='.(int)$_GET['ref_id'].'"> </a> \'
 +\'		</div> \'
 +\'	</div> \'
@@ -111,17 +115,17 @@ fileUpload1 = new ilFileUpload(1, {"dropZone":"#ilFileUploadDropZone_1","fileInp
 });
 </script>
 <script type="text/javascript">
-    il.FileUpload.texts.fileTooLarge = "Die hochzuladende Datei überschreitet die maximale Dateigröße.";
-    il.FileUpload.texts.invalidFileType = "Falscher Dateityp";
-    il.FileUpload.texts.fileZeroBytes = "Die Datei ist entweder 0 Byte gross oder es handelt sich um einen Ordner.";
-    il.FileUpload.texts.uploadWasZeroBytes = "Das Hochladen ist fehlgeschlagen, da dies entweder ein Ordner ist, die Datei 0 Byte gross ist oder die Datei inzwischen gelöscht oder umbenannt wurde.";
-    il.FileUpload.texts.cancelAllQuestion = "Wollen Sie das Hochladen der ausstehenden Dateien abbrechen?";
-    il.FileUpload.texts.extractionFailed = "Das Entpacken des Archivs und dessen Ordnerstruktur ist fehlgeschlagen. Wahrscheinlich verfügen Sie nicht über die Rechte um Ordner oder Kategorien in diesem Objekt zu erstellen.";
-    il.FileUpload.texts.uploading = "Hochladen...";
-    il.FileUpload.texts.extracting = "Entpacken...";
-    il.FileUpload.texts.dropFilesHere = "Ziehen Sie die Dateien hier hin, um sie in dieses Objekt hochzuladen.";
-    il.FileUpload.defaults.concurrentUploads = 3;
-    il.FileUpload.defaults.maxFileSize = 734003200;
+    il.FileUpload.texts.fileTooLarge = "'.$lng->txt("form_msg_file_size_exceeds").'";
+    il.FileUpload.texts.invalidFileType = "'.$lng->txt("form_msg_file_wrong_file_type").'";
+    il.FileUpload.texts.fileZeroBytes = "'.$lng->txt("error_empty_file_or_folder").'";
+    il.FileUpload.texts.uploadWasZeroBytes = "'.$lng->txt("error_upload_was_zero_bytes").'";
+    il.FileUpload.texts.cancelAllQuestion = "'.$lng->txt("cancel_file_upload").'";
+    il.FileUpload.texts.extractionFailed = "'.$lng->txt("error_extraction_failed").'";
+    il.FileUpload.texts.uploading = "'.$lng->txt("uploading").'";
+    il.FileUpload.texts.extracting = "'.$lng->txt("extracting").'";
+    il.FileUpload.texts.dropFilesHere = "'.$lng->txt("drop_files_on_repo_obj_info").'";
+    il.FileUpload.defaults.concurrentUploads = '.ilFileUploadSettings::getConcurrentUploads().';
+    il.FileUpload.defaults.maxFileSize = '.ilFileUploadUtil::getMaxFileSize().';
     il.FileUpload.defaults.allowedExtensions = [ "mp4","m4v","mov","flv","wmv","avi","mts","m2ts","mov","avi","wmv","aac","rm","mpg","mpeg","divx","flv","swf","ts","vob","mkv","ogv","mjpeg","m4v","3gpp","mp3","png","jpg","gif" ];
     il.FileUpload.defaults.supportedArchives = [];
 	
@@ -143,7 +147,7 @@ fileUpload1 = new ilFileUpload(1, {"dropZone":"#ilFileUploadDropZone_1","fileInp
 				<span class="ilFileUploadEntryProgressBack">
 					&nbsp;
 					<span class="ilFileUploadEntryProgressBar"></span>
-					<span class="ilFileUploadEntryProgressPercent">{% (o.size === null && o.canUpload) ? print("Ausstehend") : print(o.sizeFormatted); %}</span>
+					<span class="ilFileUploadEntryProgressPercent">{% (o.size === null && o.canUpload) ? print("'.$lng->txt("upload_pending").'") : print(o.sizeFormatted); %}</span>
 				</span>
 			</td>
 			<td class="ilFileUploadEntryCancel"><button id="cancel_{%=o.id%}" class="btn btn-link" src="" ><span class="glyphicon glyphicon-remove"></span></button></td>
@@ -152,26 +156,26 @@ fileUpload1 = new ilFileUpload(1, {"dropZone":"#ilFileUploadDropZone_1","fileInp
 		<tr class="ilFileUploadEntryOptions">
 			<td colspan="3">
 				<div class="ilFileUploadEntryTitle form-group">
-					<label class="col-sm-3 control-label" for="title_{%=o.id%}">Titel</label>					
+					<label class="col-sm-3 control-label" for="title_{%=o.id%}">'.$lng->txt("title").'</label>					
 					<div class="col-sm-9">
 						<input type="text" class="form-control" size="40" id="title_{%=o.id%}" maxlength="128" name="title" value="{%=o.name%}">
 					</div>
 				</div>
 				<div  class="ilFileUploadEntryDescription form-group">
-					<label class="col-sm-3 control-label" for="desc_{%=o.id%}">Beschreibung</label>					
+					<label class="col-sm-3 control-label" for="desc_{%=o.id%}">'.$lng->txt("description").'</label>					
 					<div class="col-sm-9">
 						<textarea name="description" class="form-control" id="desc_{%=o.id%}" class="noRTEditor" wrap="virtual" rows="" style="width:90%;"></textarea>
 					</div>
 				</div>	
 				<div  class="ilFileUploadEntryDescription form-group">
-					<label class="col-sm-3 control-label" for="visibility_{%=o.id%}">Zugriff <span class="asterisk">*</span></label>					
+					<label class="col-sm-3 control-label" for="visibility_{%=o.id%}">'.$lng->txt("access").' <span class="asterisk">*</span></label>					
 					<div class="col-sm-9">
 						<label>
 							<input type="radio" id="visibility_{%=o.id%}" name="visibility_{%=o.id%}" value="users">
-							Eingeloggte Benutzer</label>
+							'.$lng->txt("access_users").'</label>
 						<label>
 							<input type="radio" id="visibility_{%=o.id%}" name="visibility_{%=o.id%}" value="public" checked="checked">
-							Öffentlich
+							'.$lng->txt("access_public").'
 						</label>
 					</div>
 				</div>				
