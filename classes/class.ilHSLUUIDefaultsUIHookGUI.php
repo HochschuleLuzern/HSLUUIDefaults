@@ -137,6 +137,16 @@ fileUpload1 = new ilFileUpload(1, {"dropZone":"#ilFileUploadDropZone_1","fileInp
 		$(id).fadeOut().remove();
 		return false;
 	}
+	function MediaCastFileTitle(filename){
+		
+		for (index = 0, len = il.FileUpload.defaults.allowedExtensions.length; index < len; ++index) {
+			ending=filename.substr(filename.length-(il.FileUpload.defaults.allowedExtensions[index].length));
+			if(ending==il.FileUpload.defaults.allowedExtensions[index]){
+				return filename.substr(0,filename.length-ending.length-1);
+			}
+		}
+		return filename;
+	}
 	
 </script>
 
@@ -162,7 +172,7 @@ fileUpload1 = new ilFileUpload(1, {"dropZone":"#ilFileUploadDropZone_1","fileInp
 				<div class="ilFileUploadEntryTitle form-group">
 					<label class="col-sm-3 control-label" for="title_{%=o.id%}">'.$lng->txt("title").'</label>					
 					<div class="col-sm-9">
-						<input type="text" class="form-control" size="40" id="title_{%=o.id%}" maxlength="128" name="title" value="{%=o.name%}">
+						<input type="text" class="form-control" size="40" id="title_{%=o.id%}" maxlength="128" name="title" value="{%=MediaCastFileTitle(o.name)%}">
 					</div>
 				</div>
 				<div  class="ilFileUploadEntryDescription form-group">
