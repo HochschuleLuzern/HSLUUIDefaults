@@ -77,7 +77,7 @@ il.Util.addOnLoad(function() {
 +\'	</div> \'
 +\'	<div class="ilFileUploadDropAlternative"> \'
 +\'		<a id="ilFileUploadFileSelect_1" class="submit omitPreventDoubleSubmission" href="#"> \'
-+\'			<span><img src="./Customizing/global/skin/hslu/images/icon_fold.svg"> '.$lng->txt('select_files_from_computer').'</span> \'
++\'			<span><img src="./templates/default/images/icon_fold.svg"> '.$lng->txt('select_files_from_computer').'</span> \'
 +\'            <input id="ilFileUploadInput_1" type="file" name="file_Standard" accept="" multiple=""> \'
 +\'		</a> \'
 +\'	</div> \'
