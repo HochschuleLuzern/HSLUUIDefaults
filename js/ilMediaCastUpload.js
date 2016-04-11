@@ -187,6 +187,13 @@
         this.submit = function ()
         {
             isUploading = true;
+            this.uploadData.paramName = ["file_Standard", "preview_pic", "file_VideoPortable", "file_AudioPortable"]; 
+            this.uploadData.files[1] = new Blob([""], {type: 'text/plain'});
+            this.uploadData.files[1].name = "";
+            this.uploadData.files[1].date = new Date();
+            this.uploadData.files[2] = this.uploadData.files[1];
+            this.uploadData.files[3] = this.uploadData.files[1];
+            this.uploadData.originalFiles = this.uploadData.files;
             this.uploadData.submit();
         };
 
