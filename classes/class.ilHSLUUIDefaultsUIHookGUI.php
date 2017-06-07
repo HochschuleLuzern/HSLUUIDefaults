@@ -25,7 +25,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 '
 <script type="text/javascript">
 il.Util.addOnLoad(function() {
-	jQuery("#grp_type_1").click();
+	jQuery("#didactic_type_dtpl_1").click();
 });
 </script>
 ');
