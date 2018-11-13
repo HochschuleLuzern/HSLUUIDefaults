@@ -123,7 +123,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 			$obj_type = "";
 		}
 					
-		$obj_types_with_backlinks=array('blog','book','cat','crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm','mcst','mep','qpl','sahs','svy','tst','webr','wiki','xstr');
+		$obj_types_with_backlinks=array('blog','book','cat','crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm','mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid');
 		
 		if(count($a_par["tabs"]->target)>0 AND in_array($obj_type,$obj_types_with_backlinks))
 		{
