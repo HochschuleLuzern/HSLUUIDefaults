@@ -20,26 +20,16 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 	
 	function getHTML($a_comp, $a_part, $a_par = array())
 	{
-	   
-	   if ($a_comp == "Services/PersonalDesktop" && $a_part == "left_column") {
+		if ($a_comp == "Services/PersonalDesktop" && $a_par == "left_column") {
 	       return array("mode" => ilUIHookPluginGUI::KEEP, "html" => "");
        }
        else if ($a_comp == "Services/MainMenu" && $a_part == "main_menu_list_entries")
 	   {
-	   		//Add entries in help menu
-	   		$html = '<script>il.Util.addOnLoad(function() {'.
-	 	   		'jQuery("#mm_help ul.dropdown-menu").prepend('.
-	 	   		'\'<li><a href="goto.php?target=file_48123_download&client_id=hslu" target="_blank"><span id="" class="glyphicon glyphicon-list-alt"></span> ILIAS Kurzreferenz</a></li>'.
-	 	   		'<li><a href="goto.php?target=cat_1629482&client_id=hslu" target="_top"><span id="" class="glyphicon glyphicon-bookmark"></span> ILIAS-FAQ, Arbeitshilfen und Sandkasten</a></li>'.
-	 	   		'<li><a href="https://www.ilias.de/docu/goto_docu_cat_5646.html" target="_blank"><span id="" class="glyphicon glyphicon-book"></span> Benutzerdokumentation</a></li>\');';
-			
 			//Set groups to closed by default
-			if (isset($_GET['new_type']) && $_GET['new_type']=='grp' && isset($_GET['cmd']) && $_GET['cmd']=='create'){
-				$html .= 'jQuery("#didactic_type_dtpl_1").click();';
+			if (isset($_GET['new_type']) && $_GET['new_type']=='grp' && isset($_GET['cmd']) && $_GET['cmd']=='create'){ 
+				$html .= '<script>il.Util.addOnLoad(function() {jQuery("#didactic_type_dtpl_1").click();});</script>';
 			}
-			
-			$html .= '});</script>';
-	   	
+				   	
 		   	return array("mode" => ilUIHookPluginGUI::APPEND, "html" => $html);
 	   }
 	}
