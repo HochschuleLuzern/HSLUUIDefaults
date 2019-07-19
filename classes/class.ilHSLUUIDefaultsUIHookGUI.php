@@ -16,6 +16,8 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 	private $obj_def;
 	
 	private $rbacsystem;
+	
+	private $obj_types_with_backlinks = ['blog','book','cat', 'copa', 'crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm', 'lso', 'mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid'];
 
 	
 	function getHTML($a_comp, $a_part, $a_par = array())
@@ -112,10 +114,8 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 		} else {
 			$obj_type = "";
 		}
-					
-		$obj_types_with_backlinks=array('blog','book','cat','crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm','mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid');
 		
-		if(count($a_par["tabs"]->target)>0 AND in_array($obj_type,$obj_types_with_backlinks))
+		if(count($a_par["tabs"]->target)>0 AND in_array($obj_type,$this->obj_types_with_backlinks))
 		{
 			// This function only works with a hslu-patch
 			if(!method_exists($this->tabs,'hasBackTarget') || !$this->tabs->hasBackTarget())
