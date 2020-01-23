@@ -88,8 +88,6 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 			$objects = $this->tree->getSavedNodeData($this->ref_id);
 			if (count($objects) > 0)
 			{
-				$link=ilLink::_getLink($this->ref_id,'trash',array(),'');
-
 				$obj_type=$this->ctrl->context_obj_type;
 				$class_name = $this->obj_def->getClassName($obj_type);
 				$next_class = strtolower("ilObj".$class_name."GUI");
