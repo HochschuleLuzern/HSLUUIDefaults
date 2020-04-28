@@ -123,7 +123,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 				
 				if($obj_type == 'crs' || ($obj_type == 'grp' && ($parent_type == 'cat' || $parent_type == 'root')))
 				{
-					$favorite_link = $this->ctrl->getLinkTargetByClass('ilPersonalDesktopGUI', 'jumpToSelectedItems');
+					$favorite_link = $this->ctrl->getLinkTargetByClass('ilDashboardGUI', 'show');
 					$this->tabs->setBackTarget($this->plugin_object->txt('favorite_link'), $favorite_link);
 				}
 				else
