@@ -19,6 +19,10 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 	
 	private $obj_types_with_backlinks = ['blog','book','cat', 'copa', 'crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm', 'lso', 'mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid'];
 
+	protected function buildSelectAllCheckbox() {
+		return "<table class='table table-striped fullwidth'><thead></thead><tbody><tr><td><input class='selectall' type='checkBox' onclick='checkAllCheckboxes(this)' /><span style='margin-left: 10px'>Select All</span></td></tr></tbody></table>";
+	}
+
 	
 	function getHTML($a_comp, $a_part, $a_par = array())
 	{
@@ -34,6 +38,27 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 		   if (isset($_GET['new_type']) && $_GET['new_type']=='grp' && isset($_GET['cmd']) && $_GET['cmd']=='create'){
 		       $html .= '<script>il.Util.addOnLoad(function() {jQuery("#didactic_type_dtpl_1").click();});</script>';
 		   }
+
+		   // Create Checkbox to select all content
+			if (isset($_GET["cmdClass"]) && isset($_GET["baseClass"]) && isset($_GET["cmd"])
+				&& strtolower($_GET["cmdClass"]) == 'ilpdselecteditemsblockgui' && strtolower($_GET["baseClass"]) == 'ildashboardgui' && strtolower($_GET["cmd"]) == 'manage') {
+
+				$checkbox_html = $this->buildSelectAllCheckbox();
+
+				// JavaScript to add a checkbox. The var $checkbox_html is used 1 time inside of this js-Block to make the code a little bit more readable
+				$html .= '<script>
+						function checkAllCheckboxes(obj) {
+							var checked = $(obj).prop(\'checked\');
+							$("#ilToolbar").find("input[type=\'checkbox\']").prop(\'checked\', checked);
+						}
+						
+						il.Util.addOnLoad(function() {
+							checkbox = "'.$checkbox_html.'";
+							$("#ilToolbar nav:first").append(checkbox);
+							$("#ilToolbar nav:last").prepend(checkbox);
+						});
+					</script>';
+			}
 
 		   return array("mode" => ilUIHookPluginGUI::APPEND, "html" => $html);
 		}
