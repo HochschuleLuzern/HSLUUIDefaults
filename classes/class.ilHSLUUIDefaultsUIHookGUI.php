@@ -48,14 +48,23 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 				// JavaScript to add a checkbox. The var $checkbox_html is used 1 time inside of this js-Block to make the code a little bit more readable
 				$html .= '<script>
 						function checkAllCheckboxes(obj) {
-							var checked = $(obj).prop(\'checked\');
-							$("#ilToolbar").find("input[type=\'checkbox\']").prop(\'checked\', checked);
+							var checked = obj.checked;
+							document.getElementById("ilToolbar").querySelectorAll("input[type=\'checkbox\']").forEach(
+								box => { box.checked = checked; }
+							);
 						}
 						
 						il.Util.addOnLoad(function() {
-							checkbox = "'.$checkbox_html.'";
-							$("#ilToolbar nav:first").append(checkbox);
-							$("#ilToolbar nav:last").prepend(checkbox);
+							let checkbox_top = document.createElement("template");
+							let checkbox_bottom = document.createElement("template");
+
+							checkbox_top.innerHTML = "'.$checkbox_html.'";
+							checkbox_bottom.innerHTML = "'.$checkbox_html.'";
+							
+							nodes = document.querySelectorAll("#ilToolbar nav");
+							nodes[0].append(checkbox_top.content.firstChild);
+							nodes[nodes.length - 1].prepend(checkbox_bottom.content.firstChild);
+		
 						});
 					</script>';
 			}
