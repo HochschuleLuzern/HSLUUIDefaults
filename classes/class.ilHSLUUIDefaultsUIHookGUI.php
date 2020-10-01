@@ -20,7 +20,10 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 	private $obj_types_with_backlinks = ['blog','book','cat', 'copa', 'crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm', 'lso', 'mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid'];
 
 	protected function buildSelectAllCheckbox() {
-		return "<table class='table table-striped fullwidth'><thead></thead><tbody><tr><td><input class='selectall' type='checkBox' onclick='checkAllCheckboxes(this)' /><span style='margin-left: 10px'>Select All</span></td></tr></tbody></table>";
+		global $DIC;
+
+		$select_all_str = $DIC->language()->txt("select_all", "Select All");
+		return "<table class='table table-striped fullwidth'><thead></thead><tbody><tr><td><input class='selectall' type='checkBox' onclick='checkAllCheckboxes(this)' /><span style='margin-left: 10px'>$select_all_str</span></td></tr></tbody></table>";
 	}
 
 	
