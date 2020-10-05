@@ -23,7 +23,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 		global $DIC;
 
 		$select_all_str = $DIC->language()->txt("select_all", "Select All");
-		return "<table class='table table-striped fullwidth'><thead></thead><tbody><tr><td><input class='selectall' type='checkBox' onclick='checkAllCheckboxes(this)' /><span style='margin-left: 10px'>$select_all_str</span></td></tr></tbody></table>";
+		return "<tr><td><input class='selectall' type='checkBox' onclick='checkAllCheckboxes(this)' /><span style='margin-left: 10px'>$select_all_str</span></td></tr>";
 	}
 
 	
@@ -51,23 +51,19 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 				// JavaScript to add a checkbox. The var $checkbox_html is used 1 time inside of this js-Block to make the code a little bit more readable
 				$html .= '<script>
 						function checkAllCheckboxes(obj) {
-							var checked = obj.checked;
-							document.getElementById("ilToolbar").querySelectorAll("input[type=\'checkbox\']").forEach(
+							let checked = obj.checked;
+							par = obj.parentElement.parentElement.parentElement;
+							par.querySelectorAll("input[type=\'checkbox\']").forEach(
 								box => { box.checked = checked; }
 							);
 						}
 						
 						il.Util.addOnLoad(function() {
-							let checkbox_top = document.createElement("template");
-							let checkbox_bottom = document.createElement("template");
-
-							checkbox_top.innerHTML = "'.$checkbox_html.'";
-							checkbox_bottom.innerHTML = "'.$checkbox_html.'";
-							
-							nodes = document.querySelectorAll("#ilToolbar nav");
-							nodes[0].append(checkbox_top.content.firstChild);
-							nodes[nodes.length - 1].prepend(checkbox_bottom.content.firstChild);
-		
+							document.querySelectorAll(".table-responsive table tbody").forEach((obj) => { 
+								let checkbox = document.createElement("template");
+								checkbox.innerHTML = "'.$checkbox_html.'";
+								obj.append(checkbox.content.firstChild);
+							 });
 						});
 					</script>';
 			}
