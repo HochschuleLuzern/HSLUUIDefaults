@@ -57,11 +57,12 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 				$classes [] = $call['class'];
 			}
 			
-			if($_GET['baseClass']=='ilPersonalDesktopGUI' && ((int)$_GET['wsp_id']!=0) 
+			if($_GET['baseClass']=='ilPersonalDesktopGUI' && ((int)$_GET['wsp_id']!=0)
+			        || $_GET['cmd']=='edit'
 					|| array_search('ilObjRoleGUI', $classes) !== false
 					|| $this->ref_id==0)
 			{
-				//We are in the Personal Desktop, in the root note, or in the roleGUI and we do nothing
+				//We are in the Personal Desktop, in the root note, in the editor or in the roleGUI and we do nothing
 			}
 			else if($_GET['baseClass']=='ilMailGUI' && ((int)$_GET['mail_id']!=0) || $_GET['cmd']=='mailUser' || $_GET['cmdClass']=='ilmailformgui' || $_GET['ref']=='mail')
 			{
