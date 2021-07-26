@@ -1,39 +1,31 @@
 <?php
-/**
-* ilHSLUUIDefaultsUIHookGUI class
-*
-* @author Stephan Winiker <stephan.winiker@hslu.ch>
-* @version $Id$
-* @ingroup ServicesUIComponent
-*/
+declare(strict_types = 1);
+
 class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
-	private $ctrl;
-	private $tree;
-	private $lang;
-	private $tabs;
-	private $user;
+	private \ilCtrl $ctrl;
+	private \ilTree $tree;
+	private \ilLanguage $lang;
+	private \ilTabsGUI $tabs;
+	private \ilObjUser $user;
 	private $ref_id;
 	private $obj_def;
+	private $categories_with_fav_link;
 	
-	private $rbacsystem;
+	private \ilRbacSystem $rbacsystem;
 	
-	private $obj_types_with_backlinks = ['blog','book','cat', 'copa', 'crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm', 'lso', 'mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid'];
+	private array $obj_types_with_backlinks = ['blog','book','cat', 'copa', 'crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm', 'lso', 'mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid'];
 
 	
 	function getHTML($a_comp, $a_part, $a_par = array())
 	{
-		if ($a_comp == "Services/PersonalDesktop" && $a_par == "left_column") {
-	       return array("mode" => ilUIHookPluginGUI::KEEP, "html" => "");
-       }
-       else if ($a_comp == "Services/MainMenu" && $a_part == "main_menu_list_entries")
-	   {
-			//Set groups to closed by default
-			if (isset($_GET['new_type']) && $_GET['new_type']=='grp' && isset($_GET['cmd']) && $_GET['cmd']=='create'){ 
-				$html .= '<script>il.Util.addOnLoad(function() {jQuery("#didactic_type_dtpl_1").click();});</script>';
-			}
-				   	
-		   	return array("mode" => ilUIHookPluginGUI::APPEND, "html" => $html);
-	   }
+	    if ($a_comp == "Services/MainMenu" && $a_part == "main_menu_list_entries") {
+	        //Set groups to closed by default
+	        if (isset($_GET['new_type']) && $_GET['new_type']=='grp' && isset($_GET['cmd']) && $_GET['cmd']=='create'){ 
+	            $html .= '<script>il.Util.addOnLoad(function() {jQuery("#didactic_type_dtpl_1").click();});</script>';
+	        }
+	        
+	        return array("mode" => ilUIHookPluginGUI::APPEND, "html" => $html);
+	    }
 	}
 	
 	function modifyGUI($a_comp, $a_part, $a_par = array())
@@ -49,6 +41,9 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 			$this->obj_def = $DIC["objDefinition"];
 			$this->rbacsystem = $DIC->rbac()->system();
 			
+			$config = new ilHSLUUIDefaultsConfig($DIC->database());
+			$this->categories_with_fav_link = $config->getCategoriesWithFavLink();
+			
 			$this->ref_id=(int)$_GET['ref_id'];
 			
 			$classes = [];
@@ -58,7 +53,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 			}
 			
 			if($_GET['baseClass']=='ilPersonalDesktopGUI' && ((int)$_GET['wsp_id']!=0)
-			        || $_GET['cmd']=='edit'
+			        || ($_GET['cmd']=='edit' && $_GET['baseClass'] != 'ilrepositorygui')
 					|| array_search('ilObjRoleGUI', $classes) !== false
 					|| $this->ref_id==0)
 			{
@@ -77,14 +72,9 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 		}
 	}
 	
-	private function addTrashLInk()
+	private function addTrashLink()
 	{
-		if($this->user->login=='anonymous')
-		{
-		
-		}
-		else if($this->rbacsystem->checkAccess('create_file',$this->ref_id))
-		{
+		if ($this->user->login != 'anonymous' && $this->rbacsystem->checkAccess('create_file',$this->ref_id)) {
 			
 			$objects = $this->tree->getSavedNodeData($this->ref_id);
 			if (count($objects) > 0)
@@ -103,8 +93,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 		}
 	}
 	
-	private function addBacklink($a_par)
-	{	
+	private function addBacklink($a_par) {	
 		$parent_id=$this->tree->getParentId($this->ref_id);
 		$object=ilObjectFactory::getInstanceByRefId($this->ref_id, false);
 		
@@ -114,16 +103,15 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 			$obj_type = "";
 		}
 		
-		if(count($a_par["tabs"]->target)>0 AND in_array($obj_type,$this->obj_types_with_backlinks))
-		{
+		if(count($a_par["tabs"]->target) > 0 AND in_array( $obj_type, $this->obj_types_with_backlinks)) {
 			// This function only works with a hslu-patch
-			if(!method_exists($this->tabs,'hasBackTarget') || !$this->tabs->hasBackTarget())
-			{			
+			if(!method_exists($this->tabs,'hasBackTarget') || !$this->tabs->hasBackTarget()) {			
 				$parentobject=ilObjectFactory::getInstanceByRefId($parent_id);
 				$parent_type = $parentobject->getType();
 				
-				if($obj_type == 'crs' || ($obj_type == 'grp' && ($parent_type == 'cat' || $parent_type == 'root')))
-				{
+				if($obj_type == 'crs' || 
+				    ($obj_type == 'grp' && ($parent_type == 'cat' || $parent_type == 'root')) ||
+				    in_array($this->ref_id, $this->categories_with_fav_link)) {
 					$favorite_link = $this->ctrl->getLinkTargetByClass('ilDashboardGUI', 'show');
 					$this->tabs->setBackTarget($this->plugin_object->txt('favorite_link'), $favorite_link);
 				}
