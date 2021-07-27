@@ -10,12 +10,9 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
     private $user;
     private $ref_id;
     private $obj_def;
-    private $categories_with_fav_link;
-    
     private $rbacsystem;
-    
-    private $obj_types_with_backlinks = ['blog','book','cat', 'copa', 'crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm', 'lso', 'mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid'];
-
+    private $obj_types_with_backlinks;
+    private $categories_with_fav_link;
     
     public function getHTML($a_comp, $a_part, $a_par = array())
     {
@@ -43,6 +40,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
             
             $config = new ilHSLUUIDefaultsConfig($DIC->database());
             $this->categories_with_fav_link = $config->getCategoriesWithFavLink();
+            $this->obj_types_with_backlinks = $config->getObjTypesWithBacklinks();
             
             $this->ref_id = (int) $_GET['ref_id'];
             
@@ -104,20 +102,18 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
                 $parentobject = ilObjectFactory::getInstanceByRefId($parent_id);
                 $parent_type = $parentobject->getType();
                 
-                if (($obj_type == 'crs' || $obj_type == 'grp') && ($parent_type == 'cat' || $parent_type == 'root')) {
-                    if ((($obj_type == 'crs' ||
-                    $obj_type == 'grp') && ($parent_type == 'cat' || $parent_type == 'root')) ||
-                    in_array($this->ref_id, $this->categories_with_fav_link)) {
-                        $favorite_link = $this->ctrl->getLinkTargetByClass('ilDashboardGUI', 'show');
-                        $this->tabs->setBackTarget($this->plugin_object->txt('favorite_link'), $favorite_link);
+                if ((($obj_type == 'crs' || $obj_type == 'grp') && ($parent_type == 'cat' || $parent_type == 'root')) ||
+                $obj_type == 'xcwi' ||
+                in_array($this->ref_id, $this->categories_with_fav_link)) {
+                    $favorite_link = $this->ctrl->getLinkTargetByClass('ilDashboardGUI', 'show');
+                    $this->tabs->setBackTarget($this->plugin_object->txt('favorite_link'), $favorite_link);
+                } else {
+                    $explorer = new ilRepositoryExplorer($parent_id);
+                    $back_link = $explorer->buildLinkTarget($parent_id, $parent_type);
+                    if ($parent_type == 'xcwi') {
+                        $this->tabs->setBackTarget($this->plugin_object->txt("xcwi_back_link"), $back_link);
                     } else {
-                        $explorer = new ilRepositoryExplorer($parent_id);
-                        $back_link = $explorer->buildLinkTarget($parent_id, $parent_type);
-                        if ($parent_type == 'xcwi') {
-                            $this->tabs->setBackTarget($this->plugin_object->txt("xcwi_back_link"), $back_link);
-                        } else {
-                            $this->tabs->setBackTarget($this->plugin_object->txt("back_link"), $back_link);
-                        }
+                        $this->tabs->setBackTarget($this->plugin_object->txt("back_link"), $back_link);
                     }
                 }
             }

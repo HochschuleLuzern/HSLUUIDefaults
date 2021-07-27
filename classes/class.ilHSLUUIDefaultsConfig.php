@@ -9,6 +9,7 @@ class ilHSLUUIDefaultsConfig
             'type' => 'int[]'
         ]
     ];
+    private const OBJ_TYPES_WITH_BACKLINKS = ['blog','book','cat', 'copa', 'crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm', 'lso', 'mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid','xcwi'];
     private $config = [];
     private $db;
     
@@ -55,6 +56,11 @@ class ilHSLUUIDefaultsConfig
     public function getCategoriesWithFavLinkAsString() : string
     {
         return $this->returnConfigValueAsString($this->getCategoriesWithFavLink());
+    }
+    
+    public function getObjTypesWithBacklinks() : array
+    {
+        return self::OBJ_TYPES_WITH_BACKLINKS;
     }
     
     public function getConfigurationStructure() : array
