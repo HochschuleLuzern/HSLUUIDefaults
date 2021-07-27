@@ -15,5 +15,4 @@ $ilias_max_version = "7.999";
 $responsible = "Stephan Winiker";
 $responsible_mail = "stephan.winiker@hslu.ch";
 $responsible = "Raphael Heer";
-$responsible_mail = "raphael.heer@hslu.ch"; 
-?>
+$responsible_mail = "raphael.heer@hslu.ch";

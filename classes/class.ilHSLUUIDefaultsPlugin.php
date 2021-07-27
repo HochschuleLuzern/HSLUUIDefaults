@@ -12,10 +12,8 @@ include_once("./Services/UIComponent/classes/class.ilUserInterfaceHookPlugin.php
  */
 class ilHSLUUIDefaultsPlugin extends ilUserInterfaceHookPlugin
 {
-        function getPluginName()
-        {
-                return "HSLUUIDefaults";
-        }
+    public function getPluginName()
+    {
+        return "HSLUUIDefaults";
+    }
 }
- 
-?>
