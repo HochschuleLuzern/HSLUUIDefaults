@@ -34,7 +34,9 @@ class ilHSLUUIDefaultsConfigGUI extends ilPluginConfigGUI {
 	
 	private function initConfigurationForm() {
 	    $categories_with_fav_link = $this->config->getCategoriesWithFavLinkAsString();
-	    $categories_with_fav_link_input = $this->ui->factory()->input()->field()->text('categories_with_fav_link')->withValue($categories_with_fav_link);
+	    $categories_with_fav_link_input = $this->ui->factory()->input()->field()->text($this->plugin_object->txt('categories_with_fav_link'))
+	    ->withByline($this->plugin_object->txt('categories_with_fav_link_desc'))   
+	    ->withValue($categories_with_fav_link);
 		$form_actions = $this->ctrl->getFormActionByClass('ilHSLUUIDefaultsConfigGUI', 'save');
 		return $this->ui->factory()->input()->container()->form()->standard($form_actions, 
 		    ['categories_with_fav_link' => $categories_with_fav_link_input]);

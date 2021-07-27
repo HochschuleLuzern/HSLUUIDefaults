@@ -1,3 +1,6 @@
 <!-- language file start -->
 back_link#:#Ebene hoch
+xcwi_back_link#:#Kursvorlagen Übersicht
 favorite_link#:#Zu Favoriten
+categories_with_fav_link#:#Kategorien mit Link zu Favoriten
+categories_with_fav_link_desc#:#Diese Kategorien zeigen einen Link zu den Favoriten statt einen "Ebene  hoch"-Link.

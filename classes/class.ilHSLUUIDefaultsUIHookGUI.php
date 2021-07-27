@@ -109,8 +109,9 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 				$parentobject=ilObjectFactory::getInstanceByRefId($parent_id);
 				$parent_type = $parentobject->getType();
 				
-				if($obj_type == 'crs' || 
-				    ($obj_type == 'grp' && ($parent_type == 'cat' || $parent_type == 'root')) ||
+				if(($obj_type == 'crs' || $obj_type == 'grp') && ($parent_type == 'cat' || $parent_type == 'root'))
+				if((($obj_type == 'crs' || 
+				    $obj_type == 'grp') && ($parent_type == 'cat' || $parent_type == 'root')) ||
 				    in_array($this->ref_id, $this->categories_with_fav_link)) {
 					$favorite_link = $this->ctrl->getLinkTargetByClass('ilDashboardGUI', 'show');
 					$this->tabs->setBackTarget($this->plugin_object->txt('favorite_link'), $favorite_link);
@@ -119,7 +120,11 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI {
 				{
 					$explorer = new ilRepositoryExplorer($parent_id);
 					$back_link = $explorer->buildLinkTarget($parent_id, $parent_type);
-					$this->tabs->setBackTarget($this->plugin_object->txt("back_link"),$back_link);
+					if($parent_type == 'xcwi') {
+					    $this->tabs->setBackTarget($this->plugin_object->txt("xcwi_back_link"),$back_link);
+					} else {
+					   $this->tabs->setBackTarget($this->plugin_object->txt("back_link"),$back_link);
+					}
 				}
 			}
 		}
