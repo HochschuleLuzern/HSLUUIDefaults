@@ -3,18 +3,18 @@ declare(strict_types = 1);
 
 class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
 {
-    private \ilCtrl $ctrl;
-    private \ilTree $tree;
-    private \ilLanguage $lang;
-    private \ilTabsGUI $tabs;
-    private \ilObjUser $user;
+    private $ctrl;
+    private $tree;
+    private $lang;
+    private $tabs;
+    private $user;
     private $ref_id;
     private $obj_def;
     private $categories_with_fav_link;
     
-    private \ilRbacSystem $rbacsystem;
+    private $rbacsystem;
     
-    private array $obj_types_with_backlinks = ['blog','book','cat', 'copa', 'crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm', 'lso', 'mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid'];
+    private $obj_types_with_backlinks = ['blog','book','cat', 'copa', 'crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm', 'lso', 'mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid'];
 
     
     public function getHTML($a_comp, $a_part, $a_par = array())

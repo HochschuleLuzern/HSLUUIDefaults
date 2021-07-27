@@ -6,10 +6,10 @@ use Psr\Http\Message\RequestInterface;
 
 class ilHSLUUIDefaultsConfigGUI extends ilPluginConfigGUI
 {
-    private \ilHSLUUIDefaultsConfig $config;
-    private UIServices $ui;
-    private RequestInterface $request;
-    private \ilCtrl $ctrl;
+    private $config;
+    private $ui;
+    private $request;
+    private $ctrl;
     
     public function performCommand($cmd)
     {

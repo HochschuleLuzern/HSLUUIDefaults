@@ -10,7 +10,7 @@ class ilHSLUUIDefaultsConfig
         ]
     ];
     private $config = [];
-    private \ilDBInterface $db;
+    private $db;
     
     public function __construct(ilDBInterface $db)
     {
