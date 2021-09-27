@@ -14,18 +14,6 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
     private $obj_types_with_backlinks;
     private $categories_with_fav_link;
     
-    public function getHTML($a_comp, $a_part, $a_par = array())
-    {
-        if ($a_comp == "Services/MainMenu" && $a_part == "main_menu_list_entries") {
-            //Set groups to closed by default
-            if (isset($_GET['new_type']) && $_GET['new_type'] == 'grp' && isset($_GET['cmd']) && $_GET['cmd'] == 'create') {
-                $html .= '<script>il.Util.addOnLoad(function() {jQuery("#didactic_type_dtpl_1").click();});</script>';
-            }
-            
-            return array("mode" => ilUIHookPluginGUI::APPEND, "html" => $html);
-        }
-    }
-    
     public function modifyGUI($a_comp, $a_part, $a_par = array())
     {
         if ($a_part == "tabs") {

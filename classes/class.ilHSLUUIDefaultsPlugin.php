@@ -1,6 +1,6 @@
 <?php
  
-include_once("./Services/UIComponent/classes/class.ilUserInterfaceHookPlugin.php");
+include_once "class.ilHSLUUIDefaultsGlobalScreenModificationProvider.php";
  
 /**
  * HSLUUIDefaults plugin
@@ -12,6 +12,14 @@ include_once("./Services/UIComponent/classes/class.ilUserInterfaceHookPlugin.php
  */
 class ilHSLUUIDefaultsPlugin extends ilUserInterfaceHookPlugin
 {
+    public function __construct() {
+        parent::__construct();
+        global $DIC;
+        
+        $this->provider_collection
+        ->setModificationProvider(new ilHSLUUIDefaultsGlobalScreenModificationProvider($DIC, $this));
+    }
+    
     public function getPluginName()
     {
         return "HSLUUIDefaults";
