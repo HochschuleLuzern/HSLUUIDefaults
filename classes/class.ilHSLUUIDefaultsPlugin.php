@@ -14,6 +14,13 @@ class ilHSLUUIDefaultsPlugin extends ilUserInterfaceHookPlugin
 {
     public function __construct() {
         parent::__construct();
+        /*
+         * We don't want this to be executed on the commandline, as it makes the setup fail
+         */
+        if (php_sapi_name() === 'cli') {
+            return;
+        }
+        
         global $DIC;
         
         $this->provider_collection
