@@ -1,17 +1,17 @@
-<?php
+<?php declare(strict_types = 1);
 
-use ILIAS\UI\Renderer;
+use ILIAS\UI\Component\Input\Container\Form\Standard as StandardForm;
 use ILIAS\DI\UIServices;
 use Psr\Http\Message\RequestInterface;
 
 class ilHSLUUIDefaultsConfigGUI extends ilPluginConfigGUI
 {
-    private $config;
-    private $ui;
-    private $request;
-    private $ctrl;
+    private ilHSLUUIDefaultsConfig $config;
+    private UIServices $ui;
+    private RequestInterface $request;
+    private ilCtrl $ctrl;
     
-    public function performCommand($cmd)
+    public function performCommand($cmd) : void
     {
         switch ($cmd) {
             case "configure":
@@ -28,13 +28,13 @@ class ilHSLUUIDefaultsConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    public function configure()
+    public function configure() : void
     {
         $form = $this->initConfigurationForm();
         $this->ui->mainTemplate()->setContent($this->ui->renderer()->render($form));
     }
     
-    private function initConfigurationForm()
+    private function initConfigurationForm() : StandardForm
     {
         $categories_with_fav_link = $this->config->getCategoriesWithFavLinkAsString();
         $categories_with_fav_link_input = $this->ui->factory()->input()->field()->text($this->plugin_object->txt('categories_with_fav_link'))
@@ -47,7 +47,7 @@ class ilHSLUUIDefaultsConfigGUI extends ilPluginConfigGUI
         );
     }
     
-    private function save()
+    private function save() : void
     {
         $form = $this->initConfigurationForm();
         $form = $form->withRequest($this->request);

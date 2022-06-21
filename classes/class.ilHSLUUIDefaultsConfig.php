@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 class ilHSLUUIDefaultsConfig
 {
@@ -10,8 +9,9 @@ class ilHSLUUIDefaultsConfig
         ]
     ];
     private const OBJ_TYPES_WITH_BACKLINKS = ['blog','book','cat', 'copa', 'crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm', 'lso', 'mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid','xcwi'];
-    private $config = [];
-    private $db;
+    private const CONTAINER_TYPES_WITH_FAVLINKS = ['crs', 'grp', 'cat', 'root', 'xcwi'];
+    private array $config = [];
+    private ilDBInterface $db;
     
     public function __construct(ilDBInterface $db)
     {
@@ -21,8 +21,9 @@ class ilHSLUUIDefaultsConfig
         }
     }
     
-    public function saveConfig($config)
+    public function saveConfig($config) : int
     {
+        $r = 0;
         foreach ($config as $key => $value) {
             if (in_array($key, array_keys(self::CONFIG_VALUES))) {
                 if ($this->db->update(
@@ -63,6 +64,11 @@ class ilHSLUUIDefaultsConfig
         return self::OBJ_TYPES_WITH_BACKLINKS;
     }
     
+    public function getContainerTypesWithFavLinks() : array
+    {
+        return self::CONTAINER_TYPES_WITH_FAVLINKS;
+    }
+    
     public function getConfigurationStructure() : array
     {
         return [
@@ -101,6 +107,9 @@ class ilHSLUUIDefaultsConfig
         return $values_as_array;
     }
     
+    /**
+     * @param string|array|NULL $config_value
+     */
     private function returnConfigValueAsString($config_value) : string
     {
         if ($config_value == null) {

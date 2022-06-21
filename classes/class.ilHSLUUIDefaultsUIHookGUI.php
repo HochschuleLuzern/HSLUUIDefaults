@@ -1,20 +1,20 @@
-<?php
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
 {
-    private $ctrl;
-    private $tree;
-    private $lang;
-    private $tabs;
-    private $user;
-    private $ref_id;
-    private $obj_def;
-    private $rbacsystem;
-    private $obj_types_with_backlinks;
-    private $categories_with_fav_link;
+    private ilCtrl $ctrl;
+    private ilTree $tree;
+    private ilLanguage $lang;
+    private ilTabsGUI $tabs;
+    private ilObjUser $user;
+    private int $ref_id;
+    private ilObjectDefinition $obj_def;
+    private ilRbacSystem $rbacsystem;
+    private array $obj_types_with_backlinks;
+    private array $container_types_with_favlinks;
+    private array $categories_with_fav_link;
     
-    public function modifyGUI($a_comp, $a_part, $a_par = array())
+    public function modifyGUI($a_comp, $a_part, $a_par = array()) : void
     {
         if ($a_part == "tabs") {
             global $DIC;
@@ -28,6 +28,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
             
             $config = new ilHSLUUIDefaultsConfig($DIC->database());
             $this->categories_with_fav_link = $config->getCategoriesWithFavLink();
+            $this->container_types_with_favlinks = $config->getContainerTypesWithFavLinks();
             $this->obj_types_with_backlinks = $config->getObjTypesWithBacklinks();
             
             $this->ref_id = (int) $_GET['ref_id'];
@@ -35,25 +36,41 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
             $classes = [];
             
             foreach ($this->ctrl->getCallHistory() as $call) {
-                $classes [] = $call['class'];
+                $classes [] = strtolower($call['class']);
             }
             
-            if ($_GET['baseClass'] == 'ilPersonalDesktopGUI' && ((int) $_GET['wsp_id'] != 0)
-                    || ($_GET['cmd'] == 'edit' && $_GET['baseClass'] != 'ilrepositorygui')
-                    || array_search('ilObjRoleGUI', $classes) !== false
-                    || $this->ref_id == 0) {
-                //We are in the Personal Desktop, in the root note, in the editor or in the roleGUI and we do nothing
-            } elseif ($_GET['baseClass'] == 'ilMailGUI' && ((int) $_GET['mail_id'] != 0) || $_GET['cmd'] == 'mailUser' || $_GET['cmdClass'] == 'ilmailformgui' || $_GET['ref'] == 'mail') {
+            $base_class = strtolower($_GET['baseClass'] ?? '');
+            $cmd_class = strtolower($_GET['cmdClass'] ?? '');
+            $cmd = strtolower($_GET['cmd'] ?? '');
+            $ref = strtolower($_GET['ref'] ?? '');
+            $wsp_id = (int) $_GET['wsp_id'];
+            $mail_id = (int) $_GET['mail_id'];
+            
+            if ($base_class === 'ilpersonaldesktopgui' && $wsp_id !== 0
+                    || $cmd === 'edit' && $base_class !== 'ilrepositorygui'
+                    || $cmd === 'editquestion'
+                    || $cmd_class === 'ilassquestionpreviewgui'
+                    || array_search('ilobjrolegui', $classes) !== false
+                    || $this->ref_id === 0) {
+                //We are in the Personal Desktop, in the root note, in the editor, in question preview, or in the roleGUI and we do nothing
+                return;
+            }
+            
+            if ($base_class === 'ilmailgui' && ($mail_id  !== 0) 
+                    || $cmd === 'mailuser' 
+                    || $cmd_class === 'ilmailformgui' 
+                    || $ref === 'mail') {
                 //We are in emails and simply set a fixed back link
                 $a_par["tabs"]->setBackTarget($this->lang->txt("back"), 'ilias.php?cmdClass=ilmailfoldergui&baseClass=ilMailGUI');
-            } else {
-                $this->addTrashLink();
-                $this->addBacklink($a_par);
+                return;
             }
+            
+            $this->addTrashLink();
+            $this->addBacklink($a_par);
         }
     }
     
-    private function addTrashLink()
+    private function addTrashLink() : void
     {
         if ($this->user->login != 'anonymous' && $this->rbacsystem->checkAccess('create_file', $this->ref_id)) {
             $objects = $this->tree->getSavedNodeData($this->ref_id);
@@ -73,7 +90,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
         }
     }
     
-    private function addBacklink($a_par)
+    private function addBacklink(array $a_par) : void
     {
         $parent_id = $this->tree->getParentId($this->ref_id);
         $object = ilObjectFactory::getInstanceByRefId($this->ref_id, false);
@@ -90,8 +107,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
                 $parentobject = ilObjectFactory::getInstanceByRefId($parent_id);
                 $parent_type = $parentobject->getType();
                 
-                if ((($obj_type == 'crs' || $obj_type == 'grp') && ($parent_type == 'cat' || $parent_type == 'root')) ||
-                $obj_type == 'xcwi' ||
+                if (in_array($obj_type, $this->container_types_with_favlinks) ||
                 in_array($this->ref_id, $this->categories_with_fav_link)) {
                     $favorite_link = $this->ctrl->getLinkTargetByClass('ilDashboardGUI', 'show');
                     $this->tabs->setBackTarget($this->plugin_object->txt('favorite_link'), $favorite_link);
