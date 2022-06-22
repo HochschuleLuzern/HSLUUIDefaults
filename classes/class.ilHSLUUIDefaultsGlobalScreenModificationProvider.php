@@ -19,8 +19,15 @@ class ilHSLUUIDefaultsGlobalScreenModificationProvider extends AbstractModificat
                 $new_type = $this->dic->http()->request()->getQueryParams()['new_type'];
                 
                 if ($new_type === 'grp' && $this->dic->ctrl()->getCmd() === 'create' ) {
-                    $this->dic->ui()->mainTemplate()->addJavaScript($this->plugin->getDirectory().'/templates/default/additionalJSHSLU.js');
+                    $this->dic->globalScreen()->layout()->meta()->addOnloadCode('document.getElementById("didactic_type_dtpl_1").click()');
                 }
+                
+                if ($this->dic->ctrl()->getCurrentClassPath() === ['ildashboardgui', 'ilpdselecteditemsblockgui'] &&
+                    $this->dic->ctrl()->getCmd() === 'manage') {
+                        $this->dic->globalScreen()->layout()->meta()->addJs($this->plugin->getDirectory().'/templates/default/additionalJSHSLU.js');
+                        $this->dic->globalScreen()->layout()->meta()->addOnloadCode('il.hslu.initializeCheckboxes()');
+                }
+                
                 return $current;
             });
     }
