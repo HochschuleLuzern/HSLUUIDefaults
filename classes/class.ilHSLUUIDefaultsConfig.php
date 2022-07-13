@@ -10,6 +10,16 @@ class ilHSLUUIDefaultsConfig
     ];
     private const OBJ_TYPES_WITH_BACKLINKS = ['blog','book','cat', 'copa', 'crs','dbk','dcl','exc','file','fold','frm','glo','grp','htlm', 'lso', 'mcst','mep','qpl','sahs','svy','tst','webr','wiki','xavc','xlvo','xmst','xpdl','xstr','xvid','xcwi'];
     private const CONTAINER_TYPES_WITH_FAVLINKS = ['crs', 'grp', 'cat', 'root', 'xcwi'];
+    private const CMD_CLASSES_WITHOUT_CHANGES = [
+        'ilassquestionpreviewgui',
+        'ildcltableeditgui',
+        'ildclfieldlistgui',
+        'ildcltableviewgui',
+        'ildcltablevieweditgui',
+        'ildcleditviewdefinitiongui',
+        'ildclcreateviewdefinitiongui',
+        'ilcontainerpagegui'
+    ];
     private array $config = [];
     private ilDBInterface $db;
     
@@ -67,6 +77,11 @@ class ilHSLUUIDefaultsConfig
     public function getContainerTypesWithFavLinks() : array
     {
         return self::CONTAINER_TYPES_WITH_FAVLINKS;
+    }
+    
+    public function getCmdClassesWithoutChanges() : array
+    {
+        return self::CMD_CLASSES_WITHOUT_CHANGES;
     }
     
     public function getConfigurationStructure() : array

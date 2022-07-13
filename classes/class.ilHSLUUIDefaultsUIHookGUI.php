@@ -49,16 +49,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
             if ($base_class === 'ilpersonaldesktopgui' && $wsp_id !== 0
                     || $cmd === 'edit' && $base_class !== 'ilrepositorygui'
                     || $cmd === 'editquestion'
-                    || in_array($cmd_class, 
-                        [
-                            'ilassquestionpreviewgui',
-                            'ildcltableeditgui',
-                            'ildclfieldlistgui',
-                            'ildcltableviewgui',
-                            'ildcltablevieweditgui',
-                            'ildcleditviewdefinitiongui',
-                            'ildclcreateviewdefinitiongui'
-                        ])
+                    || in_array($cmd_class, $config->getCmdClassesWithoutChanges())
                     || array_search('ilobjrolegui', $classes) !== false
                     || $this->ref_id === 0) {
                 //We are in the Personal Desktop, in the root note, in the editor, in question preview, or in the roleGUI and we do nothing
