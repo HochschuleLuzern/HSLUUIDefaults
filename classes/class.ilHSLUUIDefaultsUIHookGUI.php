@@ -49,6 +49,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
             if ($base_class === 'ilpersonaldesktopgui' && $wsp_id !== 0
                     || $cmd === 'edit' && $base_class !== 'ilrepositorygui'
                     || $cmd === 'editquestion'
+                    || $base_class === 'ilrepositorygui' && $cmd === 'create' && array_key_exists('new_type', $_GET)
                     || in_array($cmd_class, $config->getCmdClassesWithoutChanges())
                     || array_search('ilobjrolegui', $classes) !== false
                     || $this->ref_id === 0) {
