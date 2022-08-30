@@ -12,6 +12,8 @@ class ilHSLUUIDefaultsConfig
     private const CONTAINER_TYPES_WITH_FAVLINKS = ['crs', 'grp', 'cat', 'root', 'xcwi'];
     private const CMD_CLASSES_WITHOUT_CHANGES = [
         'ilassquestionpreviewgui',
+        'ilassquestionfeedbackeditinggui',
+        'ilassquestionhintsgui',
         'ildcltableeditgui',
         'ildclfieldlistgui',
         'ildcltableviewgui',
