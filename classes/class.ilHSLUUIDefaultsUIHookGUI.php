@@ -46,22 +46,22 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
             $wsp_id = (int) $_GET['wsp_id'];
             $mail_id = (int) $_GET['mail_id'];
             
-            if ($base_class === 'ilpersonaldesktopgui' && $wsp_id !== 0
-                    || $cmd === 'edit' && $base_class !== 'ilrepositorygui'
-                    || $cmd === 'editquestion'
-                    || $base_class === 'ilrepositorygui' && $cmd === 'create' && array_key_exists('new_type', $_GET)
-                    || in_array($cmd_class, $config->getCmdClassesWithoutChanges())
-                    || array_search('ilobjrolegui', $classes) !== false
-                    || $this->ref_id === 0) {
-                //We are in the Personal Desktop, in the root note, in the editor, in question preview, or in the roleGUI and we do nothing
+            //Catch all cases we don't want to change anything
+            if ($base_class === 'ilpersonaldesktopgui' && $wsp_id !== 0 ||
+                $cmd === 'edit' && $base_class !== 'ilrepositorygui' ||
+                $cmd === 'editquestion' ||
+                $base_class === 'ilrepositorygui' && $cmd === 'create' && array_key_exists('new_type', $_GET) ||
+                in_array($cmd_class, $config->getCmdClassesWithoutChanges()) ||
+                array_search('ilobjrolegui', $classes) !== false ||
+                $this->ref_id === 0) {
                 return;
             }
             
-            if ($base_class === 'ilmailgui' && ($mail_id  !== 0) 
-                    || $cmd === 'mailuser' 
-                    || $cmd_class === 'ilmailformgui' 
-                    || $ref === 'mail') {
-                //We are in emails and simply set a fixed back link
+            //We are in emails and simply set a fixed back link
+            if ($base_class === 'ilmailgui' && ($mail_id !== 0) ||
+                $cmd === 'mailuser' ||
+                $cmd_class === 'ilmailformgui' ||
+                $ref === 'mail') {
                 $a_par["tabs"]->setBackTarget($this->lang->txt("back"), 'ilias.php?cmdClass=ilmailfoldergui&baseClass=ilMailGUI');
                 return;
             }

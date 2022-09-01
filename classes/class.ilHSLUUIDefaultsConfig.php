@@ -21,7 +21,10 @@ class ilHSLUUIDefaultsConfig
         'ildcleditviewdefinitiongui',
         'ildclcreateviewdefinitiongui',
         'ilcontainerpagegui',
-        'ilobjectcopygui'
+        'ilobjectcopygui',
+        'ilimagemapeditorgui',
+        'ilpcmediaobjectgui',
+        'ilobjmediaobjectgui'
     ];
     private array $config = [];
     private ilDBInterface $db;

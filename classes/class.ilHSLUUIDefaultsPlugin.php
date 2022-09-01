@@ -12,7 +12,8 @@ include_once "class.ilHSLUUIDefaultsGlobalScreenModificationProvider.php";
  */
 class ilHSLUUIDefaultsPlugin extends ilUserInterfaceHookPlugin
 {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         /*
          * We don't want this to be executed on the commandline, as it makes the setup fail
