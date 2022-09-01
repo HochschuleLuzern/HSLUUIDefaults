@@ -1,6 +1,9 @@
+/**
+/ Spanish Language File for HSLU-UI-Defaults-Plugin
+**/
 <!-- language file start -->
 back_link#:#Favoritos
-xcwi_back_link#:#Lista de patrónes
-favorite_link#:#Subir
 categories_with_fav_link#:#Categories with Link to Favourites
 categories_with_fav_link_desc#:#These categories will show a link back to favourites instead of a up-link.
+favorite_link#:#Subir
+xcwi_back_link#:#Lista de patrónes
