@@ -24,7 +24,8 @@ class ilHSLUUIDefaultsConfig
         'ilobjectcopygui',
         'ilimagemapeditorgui',
         'ilpcmediaobjectgui',
-        'ilobjmediaobjectgui'
+        'ilobjmediaobjectgui',
+        'ilcourseobjectivesgui'
     ];
     private array $config = [];
     private ilDBInterface $db;
