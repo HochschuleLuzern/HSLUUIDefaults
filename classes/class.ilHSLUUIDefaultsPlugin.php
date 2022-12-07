@@ -26,6 +26,9 @@ class ilHSLUUIDefaultsPlugin extends ilUserInterfaceHookPlugin
         
         $this->provider_collection
         ->setModificationProvider(new ilHSLUUIDefaultsGlobalScreenModificationProvider($DIC, $this));
+
+        $this->provider_collection
+        ->setMainBarProvider(new ilHSLUUIDefaultsGlobalScreenMenuProvider($DIC, $this));
     }
     
     public function getPluginName()
