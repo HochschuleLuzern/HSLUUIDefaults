@@ -16,11 +16,9 @@ class ilHSLUUIDefaultsCtrlRoutingGUI
 
     // Commands which are used for ilCtrl. Public = accessible for other GUI-Classes, Private = only accessible from here
     public const CMD_DASHBOARD_PAGE = 'show_dashboard';
-    private const CMD_BLANK_PAGE = 'show_blank_page';
 
     // TAB-IDs
     private const TAB_DASHBOARD = 'dashboard';
-    private const TAB_BLANK = 'blank';
 
     private ilHSLUUIDefaultsPlugin $plugin_object;
     private ilGlobalPageTemplate $tpl;
@@ -34,6 +32,7 @@ class ilHSLUUIDefaultsCtrlRoutingGUI
     private ilObjUser $user;
     private ilErrorHandling $error;
     private ilHSLUUIDefaultsAccessChecker $access_checker;
+    private $filtered_queries = array();
 
     public function __construct()
     {
@@ -51,8 +50,13 @@ class ilHSLUUIDefaultsCtrlRoutingGUI
         $this->tree = $DIC->repositoryTree();
         $this->user = $DIC->user();
         $this->error = $DIC["ilErr"];
+        $this->filtered_queries = array();
 
         $this->access_checker = new ilHSLUUIDefaultsAccessChecker($DIC->rbac()->review());
+
+        //  add the filtered queries
+        $this->addFilteredQueries();
+
     }
 
     public function executeCommand()
@@ -70,10 +74,10 @@ class ilHSLUUIDefaultsCtrlRoutingGUI
                 $this->tabs->activateTab(self::TAB_DASHBOARD);
                 $this->showDashboardPage();
                 break;
-
-            case self::CMD_BLANK_PAGE:
-                $this->tabs->activateTab(self::TAB_BLANK);
-                $this->showBlankPage();
+            default:
+                // execute the relevant filtered query
+                $this->tabs->activateTab($this->filtered_queries[$cmd]->getId());
+                $this->showFilteredQueryPage($this->filtered_queries[$cmd]);
                 break;
         }
 
@@ -90,11 +94,73 @@ class ilHSLUUIDefaultsCtrlRoutingGUI
         $link = $this->ctrl->getLinkTargetByClass(self::CTRL_UI_ROUTE, self::CMD_DASHBOARD_PAGE);
         $this->tabs->addTab(self::TAB_DASHBOARD, $this->plugin_object->txt('tab_dashboard'), $link);
 
-        // Add tab for blank page
-        $link = $this->ctrl->getLinkTargetByClass(self::CTRL_UI_ROUTE, self::CMD_BLANK_PAGE);
-        $this->tabs->addTab(self::TAB_BLANK, $this->plugin_object->txt('tab_blank'), $link);
-    }
+        // add tabs for filtered queries
+        $this->addFilteredQueryTabs();
 
+    }
+    private function addFilteredQueries()
+    {
+        //
+        // event log
+        //
+        $columns = [
+            ["text" => $this->plugin_object->txt("evento_id"),"sort_field" => "evento_id", "width" => "7%"],
+            ["text" => $this->plugin_object->txt("last_import_data"), "sort_field" => "last_import_data", "width" => "83%"],
+            ["text" => $this->plugin_object->txt("last_import_date"), "sort_field" => "last_import_date", "width" => "10%"]
+        ];
+
+        $filter_fields = [
+            ["type" => "text", "id" => "evento_id", "label" => $this->plugin_object->txt("evento_id"), "sql_expr" => "evento_id", "operator" => ilHSLUUIDefaultsFilteredQueryGUI::OPR_LIKE],
+            ["type" => "text", "id" => "last_import_data", "label" => $this->plugin_object->txt("last_import_data"), "sql_expr" => "last_import_data", "operator" => ilHSLUUIDefaultsFilteredQueryGUI::OPR_LIKE],
+            ["type" => "text", "id" => "last_import_date", "label" => $this->plugin_object->txt("last_import_date"), "sql_expr" => "last_import_date", "operator" => ilHSLUUIDefaultsFilteredQueryGUI::OPR_LIKE]
+        ];
+
+        $sql = [
+            "select" => "*",
+            "from" => "crevento_log_events",
+            "where" => "",
+            "order_by" => "last_import_date"
+        ];
+
+        $filtered_query = new ilHSLUUIDefaultsFilteredQueryGUI($this, "show_evento_log", $this->plugin_object, $this->plugin_object->txt("evento_log"), "hsluevento", "tpl.table_row_single_column.html", $this->ctrl->getFormAction($this), $filter_fields, $columns, $sql, "last_import_date");
+
+        $this->filtered_queries[$filtered_query->getParentCmd()] = $filtered_query;
+
+        //
+        // objects
+        //
+        $columns = [
+            ["text" => $this->plugin_object->txt("obj_id"),"sort_field" => "obj_id", "width" => "7%"],
+            ["text" => $this->plugin_object->txt("title"), "sort_field" => "title", "width" => "40%"],
+            ["text" => $this->plugin_object->txt("type"), "sort_field" => "type", "width" => "6%"],
+            ["text" => $this->plugin_object->txt("ref_id"), "sort_field" => "ref_id", "width" => "7%"],
+            ["text" => $this->plugin_object->txt("path"), "sort_field" => "path", "width" => "40%"]
+        ];
+
+        $filter_fields = [
+            ["type" => "text", "id" => "obj_id", "label" => $this->plugin_object->txt("obj_id"), "sql_expr" => "ref.obj_id", "operator" => ilHSLUUIDefaultsFilteredQueryGUI::OPR_LIKE],
+            ["type" => "text", "id" => "ref_id", "label" => $this->plugin_object->txt("ref_id"), "sql_expr" => "ref.ref_id", "operator" => ilHSLUUIDefaultsFilteredQueryGUI::OPR_LIKE],
+            ["type" => "text", "id" => "title", "label" => $this->plugin_object->txt("title"), "sql_expr" => "obj.title", "operator" => ilHSLUUIDefaultsFilteredQueryGUI::OPR_LIKE]
+        ];
+
+        $sql = [
+            "select" => "obj.obj_id AS obj_id, CASE WHEN obj.type in ('cat','crs','grp','crsr','file') THEN concat('<a href=ilias.php?ref_id=', ref.ref_id, '&cmdClass=ilrepositorygui&cmdNode=wq&baseClass=ilrepositorygui>',obj.title,'</a>') ELSE obj.title END as title, obj.type AS type, ref.ref_id AS ref_id, t.path AS path ",
+            "from" => "object_reference AS ref JOIN object_data obj ON ref.obj_id = obj.obj_id JOIN tree as t ON ref.ref_id = t.child",
+            "where" => "",
+            "order_by" => "obj.obj_id"
+        ];
+
+        $filtered_query = new ilHSLUUIDefaultsFilteredQueryGUI($this, "show_objects", $this->plugin_object, $this->plugin_object->txt("objects"), "hsluobjects", "tpl.table_row_single_column.html", $this->ctrl->getFormAction($this), $filter_fields, $columns, $sql, "obj_id");
+
+        $this->filtered_queries[$filtered_query->getParentCmd()] = $filtered_query;
+    }
+    private function addFilteredQueryTabs()
+    {
+        foreach($this->filtered_queries as $key=> $query){
+            $link = $this->ctrl->getLinkTargetByClass(self::CTRL_UI_ROUTE, $query->getParentCmd());
+            $this->tabs->addTab($query->getId(), $query->title, $link);
+        }
+    }
     private function checkAccessAndRedirectOnFailure()
     {
         if (!$this->access_checker->checkIfAdminRoleIsDefinedAndUserIsAdmin($this->user)) {
@@ -125,9 +191,8 @@ class ilHSLUUIDefaultsCtrlRoutingGUI
         $this->tpl->setContent($content_html);
     }
 
-    private function showBlankPage()
-    {
-        // Just set an ampty content since this is a blank page
-        $this->tpl->setContent('');
+     private function showFilteredQueryPage(ilHSLUUIDefaultsFilteredQueryGUI $filtered_query)
+     {
+         $this->tpl->setContent($filtered_query->getHTML());
     }
 }

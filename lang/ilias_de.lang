@@ -5,8 +5,19 @@
 back_link#:#Ebene hoch
 categories_with_fav_link#:#Kategorien mit Link zu Favoriten
 categories_with_fav_link_desc#:#Diese Kategorien zeigen einen Link zu den Favoriten statt einen "Ebene  hoch"-Link.
+evento_id#:#Evento ID
+evento_log#:#Evento Log
 favorite_link#:#Zu Favoriten
 hslu_dashboard#:#HSLU Dashboard
-tab_dashboard#:#Dashboard
+last_import_data#:#Last Import Data
+last_import_date#:#Last Import Date
+obj_id#:#Obj Id
+objects#:#Objects
+path#:#Path
+ref_id#:#Ref Id
 tab_blank#:#Leerer Tab
+tab_dashboard#:#Dashboard
+tab_table#:#Tabelle
+title#:#Titel
+type#:#Type
 xcwi_back_link#:#Kursvorlagen Übersicht
