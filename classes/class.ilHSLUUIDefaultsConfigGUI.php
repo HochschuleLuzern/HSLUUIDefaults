@@ -1,5 +1,11 @@
 <?php declare(strict_types = 1);
-
+/**
+ * HSLUUIDefaults configuration user interface class
+ *
+ * @author  Mark Salter <mark.salterr@hslu.ch>
+ * @version $Id$
+ * @ilCtrl_isCalledBy    ilHSLUUIDefaultsConfigGUI: ilObjComponentSettingsGUI
+ */
 use ILIAS\UI\Component\Input\Container\Form\Standard as StandardForm;
 use ILIAS\DI\UIServices;
 use Psr\Http\Message\RequestInterface;

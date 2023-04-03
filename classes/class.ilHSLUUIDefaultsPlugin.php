@@ -12,9 +12,15 @@ include_once "class.ilHSLUUIDefaultsGlobalScreenModificationProvider.php";
  */
 class ilHSLUUIDefaultsPlugin extends ilUserInterfaceHookPlugin
 {
+    const ID = "hsluuidef";
+
     public function __construct()
     {
-        parent::__construct();
+
+        global $DIC;
+        $this->db = $DIC->database();
+        parent::__construct($this->db, $DIC["component.repository"], self::ID);
+
         /*
          * We don't want this to be executed on the commandline, as it makes the setup fail
          */
@@ -28,7 +34,7 @@ class ilHSLUUIDefaultsPlugin extends ilUserInterfaceHookPlugin
         ->setModificationProvider(new ilHSLUUIDefaultsGlobalScreenModificationProvider($DIC, $this));
     }
     
-    public function getPluginName()
+    public function getPluginName(): string
     {
         return "HSLUUIDefaults";
     }
