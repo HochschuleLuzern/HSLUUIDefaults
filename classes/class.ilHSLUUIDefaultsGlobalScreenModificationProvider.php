@@ -17,8 +17,12 @@ class ilHSLUUIDefaultsGlobalScreenModificationProvider extends AbstractModificat
     {
         return $this->dic->globalScreen()->layout()->factory()->logo()->withModification(
             function (Image $current = null) : ?Image {
-                $new_type = $this->dic->http()->request()->getQueryParams()['new_type'];
-                
+
+                $new_type = null;
+                if (array_key_exists('new_type',$this->dic->http()->request()->getQueryParams())){
+                    $new_type = $this->dic->http()->request()->getQueryParams()['new_type'];
+                }
+
                 if ($new_type === 'grp' && $this->dic->ctrl()->getCmd() === 'create') {
                     $this->dic->globalScreen()->layout()->meta()->addOnloadCode('document.getElementById("didactic_type_dtpl_1").click()');
                 }

@@ -36,7 +36,9 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
             $classes = [];
             
             foreach ($this->ctrl->getCallHistory() as $call) {
-                $classes [] = strtolower($call['class']);
+                if (array_key_exists('class',$call)){
+                    $classes[] = strtolower($call['class']);
+                }
             }
             
             $base_class = strtolower($_GET['baseClass'] ?? '');
