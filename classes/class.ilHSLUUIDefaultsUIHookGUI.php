@@ -1,5 +1,10 @@
 <?php declare(strict_types = 1);
 
+/**
+ * @author Raphael Heer <mark.salter@hslu.ch>
+ * @version $Id$
+ * @ilCtrl_IsCalledBy ilHSLUUIDefaultsUIHookGUI: ilRepositoryGUI, ilObjTestGUI
+ */
 class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
 {
     private ilCtrl $ctrl;
@@ -47,12 +52,12 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
             $ref = strtolower($_GET['ref'] ?? '');
             $wsp_id = (int) $_GET['wsp_id'];
             $mail_id = (int) $_GET['mail_id'];
-            
+
             //Catch all cases we don't want to change anything
             if ($base_class === 'ilpersonaldesktopgui' && $wsp_id !== 0 ||
                 $cmd === 'edit' && $base_class !== 'ilrepositorygui' ||
                 $cmd === 'editquestion' ||
-                $base_class === 'ilrepositorygui' && $cmd === 'create' && array_key_exists('new_type', $_GET) ||
+                $base_class === 'ilrepositorygui' && $cmd === 'create' && isset($_GET['new_type']) ||
                 in_array($cmd_class, $config->getCmdClassesWithoutChanges()) ||
                 array_search('ilobjrolegui', $classes) !== false ||
                 $this->ref_id === 0) {
@@ -78,7 +83,7 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
         if ($this->user->login != 'anonymous' && $this->rbacsystem->checkAccess('create_file', $this->ref_id)) {
             $objects = $this->tree->getSavedNodeData($this->ref_id);
             if (count($objects) > 0) {
-                $obj_type = $this->ctrl->context_obj_type;
+                $obj_type = $this->ctrl->getContextObjType();
                 $class_name = $this->obj_def->getClassName($obj_type);
                 $next_class = strtolower("ilObj" . $class_name . "GUI");
                 
@@ -115,7 +120,9 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
                     $favorite_link = $this->ctrl->getLinkTargetByClass('ilDashboardGUI', 'show');
                     $this->tabs->setBackTarget($this->plugin_object->txt('favorite_link'), $favorite_link);
                 } else {
-                    $explorer = new ilRepositoryExplorer($parent_id);
+                    //$explorer = new ilRepositoryExplorer($parent_id);
+                    $explorer = new ilRepositoryExplorer($this->ctrl->getLinkTarget($this));
+
                     $back_link = $explorer->buildLinkTarget($parent_id, $parent_type);
                     if ($parent_type == 'xcwi') {
                         $this->tabs->setBackTarget($this->plugin_object->txt("xcwi_back_link"), $back_link);

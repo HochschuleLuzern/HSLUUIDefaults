@@ -108,7 +108,7 @@ class ilHSLUUIDefaultsConfig
                 $type = substr(self::CONFIG_VALUES[$row['config_key']]['type'], 0, -2);
                 $row['config_value'] = $this->generateSettingsArray($row['config_value'], $type);
             } else {
-                settype($row['value'], self::CONFIG_VALUES[$row['config_key']]);
+                settype($row['value'], self::CONFIG_VALUES[$row['config_key']]['type']);
             }
             
             $this->config[$row['config_key']] = $row['config_value'];

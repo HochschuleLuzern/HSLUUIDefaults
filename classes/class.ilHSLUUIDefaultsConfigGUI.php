@@ -59,11 +59,11 @@ class ilHSLUUIDefaultsConfigGUI extends ilPluginConfigGUI
         $form = $form->withRequest($this->request);
         $success = $this->config->saveConfig($form->getData());
         if ($success < 0) {
-            ilUtil::sendFailure($this->pl->txt("save_failure"), true);
+            ilHSLUUIDefaultsPlugin::sendFailure($this->pl->txt("save_failure"), true);
         } elseif ($success == 0) {
-            ilUtil::sendInfo($this->pl->txt("nothing_changed"), true);
+            ilHSLUUIDefaultsPlugin::sendInfo($this->pl->txt("nothing_changed"), true);
         } else {
-            ilUtil::sendSuccess($this->pl->txt("save_success"), true);
+            ilHSLUUIDefaultsPlugin::sendSuccess($this->pl->txt("save_success"), true);
         }
         $this->configure();
     }
