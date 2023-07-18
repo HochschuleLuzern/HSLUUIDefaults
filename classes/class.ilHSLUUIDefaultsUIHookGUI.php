@@ -120,10 +120,9 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
                     $favorite_link = $this->ctrl->getLinkTargetByClass('ilDashboardGUI', 'show');
                     $this->tabs->setBackTarget($this->plugin_object->txt('favorite_link'), $favorite_link);
                 } else {
-                    //$explorer = new ilRepositoryExplorer($parent_id);
-                    $explorer = new ilRepositoryExplorer($this->ctrl->getLinkTarget($this));
 
-                    $back_link = $explorer->buildLinkTarget($parent_id, $parent_type);
+                    $back_link = ilLink::_getLink($parent_id);
+
                     if ($parent_type == 'xcwi') {
                         $this->tabs->setBackTarget($this->plugin_object->txt("xcwi_back_link"), $back_link);
                     } else {
