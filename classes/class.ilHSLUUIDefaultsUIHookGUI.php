@@ -22,59 +22,66 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
     public function modifyGUI($a_comp, $a_part, $a_par = array()) : void
     {
         if ($a_part == "tabs") {
-            global $DIC;
-            $this->ctrl = $DIC->ctrl();
-            $this->tree = $DIC->repositoryTree();
-            $this->lang = $DIC->language();
-            $this->tabs = $DIC->tabs();
-            $this->user = $DIC->user();
-            $this->obj_def = $DIC["objDefinition"];
-            $this->rbacsystem = $DIC->rbac()->system();
-            
-            $config = new ilHSLUUIDefaultsConfig($DIC->database());
-            $this->categories_with_fav_link = $config->getCategoriesWithFavLink();
-            $this->container_types_with_favlinks = $config->getContainerTypesWithFavLinks();
-            $this->obj_types_with_backlinks = $config->getObjTypesWithBacklinks();
-            
-            $this->ref_id = (int) $_GET['ref_id'];
-            
-            $classes = [];
-            
-            foreach ($this->ctrl->getCallHistory() as $call) {
-                if (array_key_exists('class',$call)){
-                    $classes[] = strtolower($call['class']);
-                }
-            }
-            
-            $base_class = strtolower($_GET['baseClass'] ?? '');
-            $cmd_class = strtolower($_GET['cmdClass'] ?? '');
-            $cmd = strtolower($_GET['cmd'] ?? '');
-            $ref = strtolower($_GET['ref'] ?? '');
-            $wsp_id = (int) $_GET['wsp_id'];
-            $mail_id = (int) $_GET['mail_id'];
+            try {
 
-            //Catch all cases we don't want to change anything
-            if ($base_class === 'ilpersonaldesktopgui' && $wsp_id !== 0 ||
-                $cmd === 'edit' && $base_class !== 'ilrepositorygui' ||
-                $cmd === 'editquestion' ||
-                $base_class === 'ilrepositorygui' && $cmd === 'create' && isset($_GET['new_type']) ||
-                in_array($cmd_class, $config->getCmdClassesWithoutChanges()) ||
-                array_search('ilobjrolegui', $classes) !== false ||
-                $this->ref_id === 0) {
-                return;
+                global $DIC;
+                $this->ctrl = $DIC->ctrl();
+                $this->tree = $DIC->repositoryTree();
+                $this->lang = $DIC->language();
+                $this->tabs = $DIC->tabs();
+                $this->user = $DIC->user();
+                $this->obj_def = $DIC["objDefinition"];
+                $this->rbacsystem = $DIC->rbac()->system();
+
+                $config = new ilHSLUUIDefaultsConfig($DIC->database());
+                $this->categories_with_fav_link = $config->getCategoriesWithFavLink();
+                $this->container_types_with_favlinks = $config->getContainerTypesWithFavLinks();
+                $this->obj_types_with_backlinks = $config->getObjTypesWithBacklinks();
+
+                $this->ref_id = (int) $_GET['ref_id'];
+
+                $classes = [];
+
+                foreach ($this->ctrl->getCallHistory() as $call) {
+                    if (array_key_exists('class',$call)){
+                        $classes[] = strtolower($call['class']);
+                    }
+                }
+
+                $base_class = strtolower($_GET['baseClass'] ?? '');
+                $cmd_class = strtolower($_GET['cmdClass'] ?? '');
+                $cmd = strtolower($_GET['cmd'] ?? '');
+                $ref = strtolower($_GET['ref'] ?? '');
+                $wsp_id = (int) $_GET['wsp_id'];
+                $mail_id = (int) $_GET['mail_id'];
+
+                //Catch all cases we don't want to change anything
+                if ($base_class === 'ilpersonaldesktopgui' && $wsp_id !== 0 ||
+                    $cmd === 'edit' && $base_class !== 'ilrepositorygui' ||
+                    $cmd === 'editquestion' ||
+                    $base_class === 'ilrepositorygui' && $cmd === 'create' && isset($_GET['new_type']) ||
+                    in_array($cmd_class, $config->getCmdClassesWithoutChanges()) ||
+                    array_search('ilobjrolegui', $classes) !== false ||
+                    $this->ref_id === 0) {
+                    return;
+                }
+
+                //We are in emails and simply set a fixed back link
+                if ($base_class === 'ilmailgui' && ($mail_id !== 0) ||
+                    $cmd === 'mailuser' ||
+                    $cmd_class === 'ilmailformgui' ||
+                    $ref === 'mail') {
+                    $a_par["tabs"]->setBackTarget($this->lang->txt("back"), 'ilias.php?cmdClass=ilmailfoldergui&baseClass=ilMailGUI');
+                    return;
+                }
+
+                $this->addTrashLink();
+                $this->addBacklink($a_par);
+            } catch (Exception $e) {
+                // Log error -> generating a backlink or trashlink should not make ILIAS crash
+                global $DIC;
+                $DIC->logger()->root()->log('Exception in ilHSLUUIHDefaults-Plugin: ' . $e->getMessage() . $e->getTraceAsString());
             }
-            
-            //We are in emails and simply set a fixed back link
-            if ($base_class === 'ilmailgui' && ($mail_id !== 0) ||
-                $cmd === 'mailuser' ||
-                $cmd_class === 'ilmailformgui' ||
-                $ref === 'mail') {
-                $a_par["tabs"]->setBackTarget($this->lang->txt("back"), 'ilias.php?cmdClass=ilmailfoldergui&baseClass=ilMailGUI');
-                return;
-            }
-            
-            $this->addTrashLink();
-            $this->addBacklink($a_par);
         }
     }
     
@@ -84,6 +91,9 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
             $objects = $this->tree->getSavedNodeData($this->ref_id);
             if (count($objects) > 0) {
                 $obj_type = $this->ctrl->getContextObjType();
+                if ($obj_type == null) {
+                    return;
+                }
                 $class_name = $this->obj_def->getClassName($obj_type);
                 $next_class = strtolower("ilObj" . $class_name . "GUI");
                 
@@ -120,7 +130,6 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
                     $favorite_link = $this->ctrl->getLinkTargetByClass('ilDashboardGUI', 'show');
                     $this->tabs->setBackTarget($this->plugin_object->txt('favorite_link'), $favorite_link);
                 } else {
-
                     $back_link = ilLink::_getLink($parent_id);
 
                     if ($parent_type == 'xcwi') {
