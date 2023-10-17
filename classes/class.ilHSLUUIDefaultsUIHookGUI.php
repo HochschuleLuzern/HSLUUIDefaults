@@ -95,9 +95,9 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
                     return;
                 }
                 $class_name = $this->obj_def->getClassName($obj_type);
-                $next_class = strtolower("ilObj" . $class_name . "GUI");
+                $next_class = "ilObj" . $class_name . "GUI";
                 
-                if ($next_class == 'ilobjgui') {
+                if (strtolower($next_class) == 'ilobjgui') {
                     return;
                 }
                 $objectgui = new $next_class("", $this->ref_id, true, false);
