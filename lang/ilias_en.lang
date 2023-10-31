@@ -5,5 +5,12 @@
 back_link#:#Up
 categories_with_fav_link#:#Categories with Link to Favourites
 categories_with_fav_link_desc#:#These categories will show a link back to favourites instead of a up-link.
+evento_id#:#Evento ID
 favorite_link#:#To Favorites
+hslu_dashboard#:#HSLU Dashboard
+last_import_data#:#Last Import Data
+last_import_date#:#Last Import Date
+tab_blank#:#Blank Tab
+tab_dashboard#:#Dashboard
+tab_table#:#Table
 xcwi_back_link#:#Course Template Overview
