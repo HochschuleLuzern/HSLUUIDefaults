@@ -100,7 +100,12 @@ class ilHSLUUIDefaultsUIHookGUI extends ilUIHookPluginGUI
                 if (strtolower($next_class) == 'ilobjgui') {
                     return;
                 }
-                $objectgui = new $next_class("", $this->ref_id, true, false);
+                if (strtolower($next_class) == 'ilobjcoursewizardgui') {
+                    $objectgui = new $next_class($this->ref_id);
+                }
+                else{
+                    $objectgui = new $next_class("", $this->ref_id, true, false);
+                }
                 if ($objectgui != null) {
                     $this->tabs->addTab("trash", $this->lang->txt('trash'), $this->ctrl->getLinkTarget($objectgui, "trash"));
                 }
