@@ -1,7 +1,6 @@
 <#1>
 <?php
 $db = $ilDB;
-include_once './Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/HSLUUIDefaults/classes/class.ilHSLUUIDefaultsConfig.php';
 $config_obj = new ilHSLUUIDefaultsConfig($db);
 $configuration = $config_obj->getConfigurationStructure();
 if (!$db->tableExists($configuration['table_name'])) {

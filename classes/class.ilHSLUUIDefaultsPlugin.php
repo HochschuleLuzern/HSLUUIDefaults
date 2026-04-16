@@ -1,6 +1,5 @@
-<?php declare(strict_types = 1);
- 
-include_once "class.ilHSLUUIDefaultsGlobalScreenModificationProvider.php";
+<?php
+declare(strict_types = 1);
  
 /**
  * HSLUUIDefaults plugin
